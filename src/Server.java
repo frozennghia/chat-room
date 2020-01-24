@@ -4,13 +4,13 @@ import java.io.*;
         import java.net.*;
 
 public class Server {
-    static int connectionsCount;
+    static int connectionsCount = 0;
     static Vector<ClientHandler> clientVector = new Vector<>();
     public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket = new ServerSocket(3000);
+        ServerSocket serverSocket = new ServerSocket(1234);
         System.out.println("Server Started!");
-        while (true) { 
-            Socket clientSocket = null;
+        while (true) {
+            Socket clientSocket;
             try {
                 clientSocket = serverSocket.accept();
                 System.out.println("New Client Request Received");
@@ -18,7 +18,7 @@ public class Server {
                 DataOutputStream outputStream = new DataOutputStream(clientSocket.getOutputStream());
 
                 //Creating a new thread to handle the client here
-                ClientHandler clientHandler = new ClientHandler(inputStream,outputStream,clientSocket);
+                ClientHandler clientHandler = new ClientHandler(inputStream,outputStream,clientSocket, "Client " + connectionsCount);
                 Thread clientHandlerThread = new Thread(clientHandler);
                 clientHandlerThread.start();
                 clientVector.add(clientHandler);
